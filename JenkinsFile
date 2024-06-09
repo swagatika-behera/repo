@@ -40,10 +40,10 @@ pipeline {
                withCredentials([sshUserPrivateKey(credentialsId: '3.93.188.197', keyFileVariable: 'SSH_KEY')]) {
                     // Copy docker-compose.yml to the remote node
                     sh "chmod 600 $SSH_KEY"
-                    sh "scp -i \$SSH_KEY -o StrictHostKeyChecking=no ${COMPOSE_FILE} ${REMOTE_USER}@${REMOTE_HOST}:/home/${REMOTE_USER}/app-directory/${COMPOSE_FILE}"
+                    sh "scp -i \$SSH_KEY -o StrictHostKeyChecking=no ${COMPOSE_FILE} ${REMOTE_USER}@${REMOTE_HOST}:/home/${REMOTE_USER}/repo/${COMPOSE_FILE}"
 
                     // Execute Docker Compose commands on the remote node
-                    sh "ssh -i \$SSH_KEY -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} 'export IMAGE_NAME=${IMAGE_NAME} && export IMAGE_TAG=${IMAGE_TAG} && cd /home/${REMOTE_USER}/app-directory && docker-compose down && docker-compose up -d'"
+                    sh "ssh -i \$SSH_KEY -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} 'export IMAGE_NAME=${IMAGE_NAME} && export IMAGE_TAG=${IMAGE_TAG} && cd /home/${REMOTE_USER}/repo && docker-compose down && docker-compose up -d'"
                 }
             }
         }
