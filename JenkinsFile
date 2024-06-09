@@ -5,7 +5,7 @@ pipeline {
         IMAGE_NAME = 'localhost:5000/my-python-app'
         IMAGE_TAG = "latest-${env.BUILD_ID}"
         REMOTE_USER = 'ec2-user' 
-        REMOTE_HOST = '172.31.16.216'
+        REMOTE_HOST = '172.31.20.95'
         COMPOSE_FILE = 'docker-compose.yml'
     }
 
