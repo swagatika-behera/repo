@@ -39,7 +39,7 @@ pipeline {
                 // Use the environment variables to deploy with Docker Compose
                withCredentials([sshUserPrivateKey(credentialsId: '54.242.169.192', keyFileVariable: 'SSH_KEY')]) {
                     // Copy docker-compose.yml to the remote node
-                    sh chmod 600 $SSH_KEY
+                    sh "chmod 600 $SSH_KEY"
                     sh "scp -i \$SSH_KEY -o StrictHostKeyChecking=no ${COMPOSE_FILE} ${REMOTE_USER}@${REMOTE_HOST}:/home/${REMOTE_USER}/app-directory/${COMPOSE_FILE}"
 
                     // Execute Docker Compose commands on the remote node
