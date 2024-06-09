@@ -4,6 +4,9 @@ pipeline {
     environment {
         IMAGE_NAME = 'localhost:5000/my-python-app'
         IMAGE_TAG = "latest-${env.BUILD_ID}"
+        REMOTE_USER = 'ec2-user' 
+        REMOTE_HOST = '172.31.16.216'
+        COMPOSE_FILE = 'docker-compose.yml'
     }
 
     stages {
@@ -34,8 +37,12 @@ pipeline {
             }
             steps {
                 // Use the environment variables to deploy with Docker Compose
-                sh 'docker-compose down'
-                sh 'IMAGE_NAME=${IMAGE_NAME} IMAGE_TAG=${IMAGE_TAG} docker-compose up -d'
+                withCredentials([sshUserPrivateKey(credentialsId: 'ssh-credentials', keyFileVariable: 'SSH_KEY')]) {
+                    // Copy docker-compose.yml to the remote node
+                    sh "scp -i $SSH_KEY ${COMPOSE_FILE} ${REMOTE_USER}@${REMOTE_HOST}:/home/${REMOTE_USER}/app-directory/${COMPOSE_FILE}"
+
+                    // Execute Docker Compose commands on the remote node
+                    sh "ssh -i $SSH_KEY ${REMOTE_USER}@${REMOTE_HOST} 'export IMAGE_NAME=${IMAGE_NAME} && export IMAGE_TAG=${IMAGE_TAG} && cd /home/${REMOTE_USER}/app-directory && docker-compose down && docker-compose up -d'"
             }
         }
     }
