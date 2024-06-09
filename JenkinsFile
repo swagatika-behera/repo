@@ -43,6 +43,7 @@ pipeline {
 
                     // Execute Docker Compose commands on the remote node
                     sh "ssh -i $SSH_KEY ${REMOTE_USER}@${REMOTE_HOST} 'export IMAGE_NAME=${IMAGE_NAME} && export IMAGE_TAG=${IMAGE_TAG} && cd /home/${REMOTE_USER}/app-directory && docker-compose down && docker-compose up -d'"
+              }
             }
         }
     }
